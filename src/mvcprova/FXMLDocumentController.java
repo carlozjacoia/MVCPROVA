@@ -6,12 +6,21 @@ package mvcprova;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import mvc.UsuarioDAO;
 import mvc.UsuarioDTO;
 
@@ -21,6 +30,12 @@ import mvc.UsuarioDTO;
  */
 public class FXMLDocumentController implements Initializable {
     
+    @FXML private TableColumn<UsuarioDTO, Integer> colunaId;
+    @FXML private TableColumn<UsuarioDTO, String> colunaNome;
+    @FXML private TableColumn<UsuarioDTO, String> colunaEmail;
+    @FXML private TableColumn<UsuarioDTO, String> colunaSenha;
+    @FXML private TableColumn<UsuarioDTO, String> colunaLogin;
+
     @FXML
     private TextField txtNome;
     
@@ -34,19 +49,88 @@ public class FXMLDocumentController implements Initializable {
     private TextField txtLogin;
     
     @FXML
-    private void handleButtonAction(ActionEvent event) throws SQLException {
-        UsuarioDAO U = new UsuarioDAO();
-        String nome = txtNome.getText();
-        String senha = txtSenha.getText();
-        String email = txtEmail.getText();
-        String login = txtLogin.getText();
-        UsuarioDTO u = new UsuarioDTO(nome, email, senha, login);
-        U.cadastrarUsuario(u);
+    private TextField txtNome1;
+    
+    @FXML
+    private TextField txtEmail1;
+    
+    @FXML
+    private TextField txtSenha1;
+    
+    @FXML
+    private TextField txtLogin1;
+    
+    @FXML
+    private Button btCadastrar;
+    @FXML
+    private Button btAtualizar;
+    
+    
+    @FXML
+    private TableView tb;
+    
+    public UsuarioDAO U = new UsuarioDAO();
+    public UsuarioDTO  selecionado;
+    
+    @FXML
+    private void cadastrar(ActionEvent event) throws SQLException {
+        if(txtNome.getText() != "" && txtSenha.getText() != "" && txtEmail.getText() != "" && txtLogin.getText() != ""){
+            String nome = txtNome.getText();
+            String senha = txtSenha.getText();
+            String email = txtEmail.getText();
+            String login = txtLogin.getText();
+            UsuarioDTO u = new UsuarioDTO(nome, email, senha, login);
+            U.cadastrarUsuario(u);
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erro");
+            alert.setHeaderText(null);
+            alert.setContentText("Preencha todos os campos antes de cadastrar!");
+            alert.showAndWait();
+        }
+        att();
     }
     
+    @FXML
+    private void atualizar(ActionEvent event) throws SQLException {
+        if(txtNome1.getText() != "" && txtSenha1.getText() != "" && txtEmail1.getText() != "" && txtLogin1.getText() != ""){
+            String nome = txtNome1.getText();
+            String senha = txtSenha1.getText();
+            String email = txtEmail1.getText();
+            String login = txtLogin1.getText();
+            selecionado.setNome(nome);
+            selecionado.setSenha(senha);
+            selecionado.setEmail(email);
+            selecionado.setLogin(login);
+            U.atualizarUsuario(selecionado);
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erro");
+            alert.setHeaderText(null);
+            alert.setContentText("Preencha todos os campos antes de atualizar!");
+            alert.showAndWait();
+        }
+        att();
+    }
+    
+    public void att(){
+        List<UsuarioDTO> listaUsuarios = U.listarUsuarios();
+        ObservableList<UsuarioDTO> usuarios = FXCollections.observableArrayList(listaUsuarios);
+        tb.setItems(usuarios);
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colunaSenha.setCellValueFactory(new PropertyValueFactory<>("senha"));
+        colunaLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
+        btAtualizar.setDisable(true);
+        tb.setOnMouseClicked(event -> {
+           selecionado =  (UsuarioDTO) tb.getSelectionModel().getSelectedItem();
+           btCadastrar.setDisable(false);
+           btAtualizar.setDisable(false);
+        });
+        att();
+    }       
 }

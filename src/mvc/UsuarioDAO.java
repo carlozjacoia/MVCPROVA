@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 public class UsuarioDAO {
     public void cadastrarUsuario(UsuarioDTO usuario) throws SQLException{
         String sql = "INSERT INTO usuario(nome, email, senha, login) VALUES (?,?,?,?)";
@@ -39,6 +41,29 @@ public class UsuarioDAO {
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public List<UsuarioDTO> listarUsuarios() {
+        List<UsuarioDTO> usuarios = new ArrayList<>();
+        String sql = "SELECT * FROM usuario";
+
+        try (Connection con = new Conexao().getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                UsuarioDTO usuario = new UsuarioDTO();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setSenha(rs.getString("senha"));
+                usuario.setLogin(rs.getString("login"));
+                usuarios.add(usuario);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return usuarios;
     }
     
     public void deletarUsuario(int id){
