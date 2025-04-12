@@ -81,6 +81,10 @@ public class FXMLDocumentController implements Initializable {
             String login = txtLogin.getText();
             UsuarioDTO u = new UsuarioDTO(nome, email, senha, login);
             U.cadastrarUsuario(u);
+            txtNome.setText("");
+            txtSenha.setText("");
+            txtEmail.setText("");
+            txtLogin.setText("");
         }else{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erro");
@@ -128,7 +132,10 @@ public class FXMLDocumentController implements Initializable {
         btAtualizar.setDisable(true);
         tb.setOnMouseClicked(event -> {
            selecionado =  (UsuarioDTO) tb.getSelectionModel().getSelectedItem();
-           btCadastrar.setDisable(false);
+           txtNome1.setText(selecionado.getNome());
+           txtEmail1.setText(selecionado.getEmail());
+           txtSenha1.setText(selecionado.getSenha());
+           txtLogin1.setText(selecionado.getLogin());
            btAtualizar.setDisable(false);
         });
         att();

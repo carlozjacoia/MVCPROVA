@@ -21,10 +21,11 @@
       <TextField fx:id="txtLogin" layoutX="44.0" layoutY="226.0" prefHeight="25.0" prefWidth="231.0" />
       <TableView fx:id="tb" editable="true" layoutX="314.0" layoutY="50.0" prefHeight="557.0" prefWidth="428.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="NOME" />
-          <TableColumn prefWidth="75.0" text="EMAIL" />
-            <TableColumn prefWidth="75.0" text="SENHA" />
-            <TableColumn prefWidth="75.0" text="LOGIN" />
+          <TableColumn fx:id="colunaId" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="colunaNome" prefWidth="75.0" text="NOME" />
+            <TableColumn fx:id="colunaEmail" prefWidth="75.0" text="EMAIL" />
+            <TableColumn fx:id="colunaSenha" prefWidth="75.0" text="SENHA" />
+            <TableColumn fx:id="colunaLogin" prefWidth="75.0" text="LOGIN" />
         </columns>
       </TableView>
       <Button fx:id="btAtualizar" layoutX="44.0" layoutY="573.0" onAction="#atualizar" prefHeight="33.0" prefWidth="231.0" text="ATUALIZAR" />
