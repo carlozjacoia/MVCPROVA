@@ -6,7 +6,10 @@ package mvcprova;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.collections.FXCollections;
@@ -16,6 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -62,6 +67,10 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private Button btCadastrar;
+    
+    @FXML
+    private Button btExcluir;
+    
     @FXML
     private Button btAtualizar;
     
@@ -96,6 +105,31 @@ public class FXMLDocumentController implements Initializable {
     }
     
     @FXML
+    private void deletar(ActionEvent event) throws SQLException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmação de Exclusão");
+        alert.setHeaderText(null);
+        alert.setContentText("Certeza que deseja deletar o usuário " + selecionado.getNome() + "?");
+
+        ButtonType botaoSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
+        ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
+
+        alert.getButtonTypes().setAll(botaoSim, botaoNao);
+
+        Optional<ButtonType> resultado = alert.showAndWait();
+        if (resultado.isPresent() && resultado.get() == botaoSim) {
+            U.deletarUsuario(selecionado.getId());
+            btExcluir.setDisable(true);
+            btAtualizar.setDisable(true);
+            txtNome1.setText("");
+           txtEmail1.setText("");
+           txtSenha1.setText("");
+           txtLogin1.setText("");
+        }
+        att();
+    }
+    
+    @FXML
     private void atualizar(ActionEvent event) throws SQLException {
         if(txtNome1.getText() != "" && txtSenha1.getText() != "" && txtEmail1.getText() != "" && txtLogin1.getText() != ""){
             String nome = txtNome1.getText();
@@ -119,17 +153,19 @@ public class FXMLDocumentController implements Initializable {
     
     public void att(){
         List<UsuarioDTO> listaUsuarios = U.listarUsuarios();
+        Collections.sort(listaUsuarios, Comparator.comparingInt(UsuarioDTO::getId));
         ObservableList<UsuarioDTO> usuarios = FXCollections.observableArrayList(listaUsuarios);
         tb.setItems(usuarios);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colunaSenha.setCellValueFactory(new PropertyValueFactory<>("senha"));
         colunaLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
         btAtualizar.setDisable(true);
+        btExcluir.setDisable(true);
         tb.setOnMouseClicked(event -> {
            selecionado =  (UsuarioDTO) tb.getSelectionModel().getSelectedItem();
            txtNome1.setText(selecionado.getNome());
@@ -137,6 +173,7 @@ public class FXMLDocumentController implements Initializable {
            txtSenha1.setText(selecionado.getSenha());
            txtLogin1.setText(selecionado.getLogin());
            btAtualizar.setDisable(false);
+           btExcluir.setDisable(false);
         });
         att();
     }       

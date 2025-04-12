@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="652.0" prefWidth="768.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mvcprova.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="707.0" prefWidth="768.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mvcprova.FXMLDocumentController">
     <children>
         <Button fx:id="btCadastrar" layoutX="44.0" layoutY="275.0" onAction="#cadastrar" prefHeight="33.0" prefWidth="231.0" text="CADASTRAR" />
         <Label fx:id="label" layoutX="159.0" layoutY="130.0" minHeight="16" minWidth="69" />
@@ -19,7 +19,7 @@
       <TextField fx:id="txtEmail" layoutX="44.0" layoutY="109.0" prefHeight="25.0" prefWidth="231.0" />
       <TextField fx:id="txtSenha" layoutX="44.0" layoutY="168.0" prefHeight="25.0" prefWidth="231.0" />
       <TextField fx:id="txtLogin" layoutX="44.0" layoutY="226.0" prefHeight="25.0" prefWidth="231.0" />
-      <TableView fx:id="tb" editable="true" layoutX="314.0" layoutY="50.0" prefHeight="557.0" prefWidth="428.0">
+      <TableView fx:id="tb" editable="true" layoutX="314.0" layoutY="50.0" prefHeight="628.0" prefWidth="428.0">
         <columns>
           <TableColumn fx:id="colunaId" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="colunaNome" prefWidth="75.0" text="NOME" />
@@ -27,6 +27,9 @@
             <TableColumn fx:id="colunaSenha" prefWidth="75.0" text="SENHA" />
             <TableColumn fx:id="colunaLogin" prefWidth="75.0" text="LOGIN" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <Button fx:id="btAtualizar" layoutX="44.0" layoutY="573.0" onAction="#atualizar" prefHeight="33.0" prefWidth="231.0" text="ATUALIZAR" />
       <Label layoutX="44.0" layoutY="335.0" prefHeight="17.0" prefWidth="55.0" text="Nome" />
@@ -37,5 +40,6 @@
       <TextField fx:id="txtEmail1" layoutX="44.0" layoutY="407.0" prefHeight="25.0" prefWidth="231.0" />
       <TextField fx:id="txtSenha1" layoutX="44.0" layoutY="466.0" prefHeight="25.0" prefWidth="231.0" />
       <TextField fx:id="txtLogin1" layoutX="44.0" layoutY="524.0" prefHeight="25.0" prefWidth="231.0" />
+      <Button fx:id="btExcluir" layoutX="44.0" layoutY="645.0" onAction="#deletar" prefHeight="33.0" prefWidth="231.0" text="DELETAR" />
     </children>
 </AnchorPane>
