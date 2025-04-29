@@ -54,16 +54,7 @@ public class FXMLDocumentController implements Initializable {
     private TextField txtLogin;
     
     @FXML
-    private TextField txtNome1;
-    
-    @FXML
-    private TextField txtEmail1;
-    
-    @FXML
-    private TextField txtSenha1;
-    
-    @FXML
-    private TextField txtLogin1;
+    private Button btLimpar;
     
     @FXML
     private Button btCadastrar;
@@ -80,10 +71,31 @@ public class FXMLDocumentController implements Initializable {
     
     public UsuarioDAO U = new UsuarioDAO();
     public UsuarioDTO  selecionado;
+    private boolean emailValido(String email) {
+        return email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
+    }
+    @FXML
+    private void limpar(ActionEvent event){
+        txtNome.setText("");
+        txtSenha.setText("");
+        txtEmail.setText("");
+        txtLogin.setText("");
+        selecionado = null;
+        btAtualizar.setDisable(true);
+        btExcluir.setDisable(true);
+    }
     
     @FXML
     private void cadastrar(ActionEvent event) throws SQLException {
-        if(txtNome.getText() != "" && txtSenha.getText() != "" && txtEmail.getText() != "" && txtLogin.getText() != ""){
+        if(!txtNome.getText().isEmpty() && !txtSenha.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtLogin.getText().isEmpty()) {
+            if (!emailValido(txtEmail.getText())) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erro de E-mail");
+                alert.setHeaderText(null);
+                alert.setContentText("E-mail inválido. Use o formato exemplo@dominio.com");
+                alert.showAndWait();
+                return;
+            }
             String nome = txtNome.getText();
             String senha = txtSenha.getText();
             String email = txtEmail.getText();
@@ -121,26 +133,47 @@ public class FXMLDocumentController implements Initializable {
             U.deletarUsuario(selecionado.getId());
             btExcluir.setDisable(true);
             btAtualizar.setDisable(true);
-            txtNome1.setText("");
-           txtEmail1.setText("");
-           txtSenha1.setText("");
-           txtLogin1.setText("");
+            txtNome.setText("");
+            txtEmail.setText("");
+            txtSenha.setText("");
+            txtLogin.setText("");
         }
         att();
     }
     
     @FXML
     private void atualizar(ActionEvent event) throws SQLException {
-        if(txtNome1.getText() != "" && txtSenha1.getText() != "" && txtEmail1.getText() != "" && txtLogin1.getText() != ""){
-            String nome = txtNome1.getText();
-            String senha = txtSenha1.getText();
-            String email = txtEmail1.getText();
-            String login = txtLogin1.getText();
-            selecionado.setNome(nome);
-            selecionado.setSenha(senha);
-            selecionado.setEmail(email);
-            selecionado.setLogin(login);
-            U.atualizarUsuario(selecionado);
+        if(!txtNome.getText().isEmpty() && !txtSenha.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtLogin.getText().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmação de Atualização");
+            alert.setHeaderText(null);
+            alert.setContentText("Certeza que deseja atualizar o usuário " + selecionado.getNome() + "?");
+
+            ButtonType botaoSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
+            ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
+
+            alert.getButtonTypes().setAll(botaoSim, botaoNao);
+
+            Optional<ButtonType> resultado = alert.showAndWait();
+            if (resultado.isPresent() && resultado.get() == botaoSim) {
+                if (!emailValido(txtEmail.getText())) {
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erro de E-mail");
+                    alert.setHeaderText(null);
+                    alert.setContentText("E-mail inválido. Use o formato exemplo@dominio.com");
+                    alert.showAndWait();
+                    return;
+                }
+                String nome = txtNome.getText();
+                String senha = txtSenha.getText();
+                String email = txtEmail.getText();
+                String login = txtLogin.getText();
+                selecionado.setNome(nome);
+                selecionado.setSenha(senha);
+                selecionado.setEmail(email);
+                selecionado.setLogin(login);
+                U.atualizarUsuario(selecionado);
+            }
         }else{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erro");
@@ -159,6 +192,10 @@ public class FXMLDocumentController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        txtNome.setFocusTraversable(true);
+        txtEmail.setFocusTraversable(true);
+        txtSenha.setFocusTraversable(true);
+        txtLogin.setFocusTraversable(true);
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -168,10 +205,10 @@ public class FXMLDocumentController implements Initializable {
         btExcluir.setDisable(true);
         tb.setOnMouseClicked(event -> {
            selecionado =  (UsuarioDTO) tb.getSelectionModel().getSelectedItem();
-           txtNome1.setText(selecionado.getNome());
-           txtEmail1.setText(selecionado.getEmail());
-           txtSenha1.setText(selecionado.getSenha());
-           txtLogin1.setText(selecionado.getLogin());
+           txtNome.setText(selecionado.getNome());
+           txtEmail.setText(selecionado.getEmail());
+           txtSenha.setText(selecionado.getSenha());
+           txtLogin.setText(selecionado.getLogin());
            btAtualizar.setDisable(false);
            btExcluir.setDisable(false);
         });
