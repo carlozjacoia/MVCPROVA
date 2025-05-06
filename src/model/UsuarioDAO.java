@@ -1,16 +1,16 @@
-package mvc;
+package model;
 
 
-import mvc.UsuarioDTO;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import mvc.Conexao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import static util.DialogUtil.showError;
+
 public class UsuarioDAO {
     public void cadastrarUsuario(UsuarioDTO usuario) throws SQLException{
         String sql = "INSERT INTO usuario(nome, email, senha, login) VALUES (?,?,?,?)";
@@ -29,6 +29,7 @@ public class UsuarioDAO {
         }
         }catch(SQLException e){
             e.printStackTrace();
+            showError("Erro ao cadastrar o usuário");
         }
     }
     
@@ -40,6 +41,7 @@ public class UsuarioDAO {
             }
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            showError("Erro ao selecionar os usuários");
         }
     }
     public List<UsuarioDTO> listarUsuarios() {
@@ -61,6 +63,7 @@ public class UsuarioDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            showError("Erro ao listar os usuários");
         }
 
         return usuarios;
@@ -74,6 +77,7 @@ public class UsuarioDAO {
             System.out.println("Usuário com ID " + id + " deletado com sucesso.");
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            showError("Erro ao deletar o usuário");
         }
     }
     
@@ -91,6 +95,7 @@ public class UsuarioDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            showError("Erro ao atualizar o usuário");
         }
     }
 }

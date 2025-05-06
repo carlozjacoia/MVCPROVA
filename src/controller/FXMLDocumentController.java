@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
  */
-package mvcprova;
+package controller;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -26,8 +26,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import mvc.UsuarioDAO;
-import mvc.UsuarioDTO;
+import javafx.scene.input.MouseEvent;
+import model.UsuarioDAO;
+import model.UsuarioDTO;
+import static util.DialogUtil.showError;
+import static util.DialogUtil.showInfo;
+
 
 /**
  *
@@ -35,11 +39,20 @@ import mvc.UsuarioDTO;
  */
 public class FXMLDocumentController implements Initializable {
     
-    @FXML private TableColumn<UsuarioDTO, Integer> colunaId;
-    @FXML private TableColumn<UsuarioDTO, String> colunaNome;
-    @FXML private TableColumn<UsuarioDTO, String> colunaEmail;
-    @FXML private TableColumn<UsuarioDTO, String> colunaSenha;
-    @FXML private TableColumn<UsuarioDTO, String> colunaLogin;
+    @FXML 
+    private TableColumn<UsuarioDTO, Integer> colunaId;
+    
+    @FXML 
+    private TableColumn<UsuarioDTO, String> colunaNome;
+    
+    @FXML 
+    private TableColumn<UsuarioDTO, String> colunaEmail;
+    
+    @FXML 
+    private TableColumn<UsuarioDTO, String> colunaSenha;
+    
+    @FXML 
+    private TableColumn<UsuarioDTO, String> colunaLogin;
 
     @FXML
     private TextField txtNome;
@@ -67,20 +80,30 @@ public class FXMLDocumentController implements Initializable {
     
     
     @FXML
-    private TableView tb;
+    private TableView table;
     
-    public UsuarioDAO U = new UsuarioDAO();
+    public UsuarioDAO usuarioDAO = new UsuarioDAO();
+    
+    //usuario selecionado
     public UsuarioDTO  selecionado;
+    
+    //valida o email
     private boolean emailValido(String email) {
         return email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$");
     }
+    
+    //limpa os campos
     @FXML
-    private void limpar(ActionEvent event){
+    private void limparCampos(ActionEvent event){
+        limparTexto();
+        selecionado = null;
+    }
+    
+    public void limparTexto(){
         txtNome.setText("");
         txtSenha.setText("");
         txtEmail.setText("");
         txtLogin.setText("");
-        selecionado = null;
         btAtualizar.setDisable(true);
         btExcluir.setDisable(true);
     }
@@ -89,11 +112,8 @@ public class FXMLDocumentController implements Initializable {
     private void cadastrar(ActionEvent event) throws SQLException {
         if(!txtNome.getText().isEmpty() && !txtSenha.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtLogin.getText().isEmpty()) {
             if (!emailValido(txtEmail.getText())) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Erro de E-mail");
-                alert.setHeaderText(null);
-                alert.setContentText("E-mail inválido. Use o formato exemplo@dominio.com");
-                alert.showAndWait();
+                //se o email nao for valido, emite um alerta na tela
+                showError("E-mail inválido. Use o formato exemplo@dominio.com");
                 return;
             }
             String nome = txtNome.getText();
@@ -101,19 +121,12 @@ public class FXMLDocumentController implements Initializable {
             String email = txtEmail.getText();
             String login = txtLogin.getText();
             UsuarioDTO u = new UsuarioDTO(nome, email, senha, login);
-            U.cadastrarUsuario(u);
-            txtNome.setText("");
-            txtSenha.setText("");
-            txtEmail.setText("");
-            txtLogin.setText("");
+            usuarioDAO.cadastrarUsuario(u);
+            limparTexto();
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Erro");
-            alert.setHeaderText(null);
-            alert.setContentText("Preencha todos os campos antes de cadastrar!");
-            alert.showAndWait();
+            showError("Preencha todos os campos antes de cadastrar.");
         }
-        att();
+       AtualizarTela();
     }
     
     @FXML
@@ -122,23 +135,26 @@ public class FXMLDocumentController implements Initializable {
         alert.setTitle("Confirmação de Exclusão");
         alert.setHeaderText(null);
         alert.setContentText("Certeza que deseja deletar o usuário " + selecionado.getNome() + "?");
-
         ButtonType botaoSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
         ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
-
         alert.getButtonTypes().setAll(botaoSim, botaoNao);
-
         Optional<ButtonType> resultado = alert.showAndWait();
         if (resultado.isPresent() && resultado.get() == botaoSim) {
-            U.deletarUsuario(selecionado.getId());
-            btExcluir.setDisable(true);
-            btAtualizar.setDisable(true);
-            txtNome.setText("");
-            txtEmail.setText("");
-            txtSenha.setText("");
-            txtLogin.setText("");
+            usuarioDAO.deletarUsuario(selecionado.getId());
+            limparTexto();
         }
-        att();
+       AtualizarTela();
+    }
+    
+    @FXML
+    private void selecionarUsuario(MouseEvent event){
+        selecionado =  (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        txtNome.setText(selecionado.getNome());
+        txtEmail.setText(selecionado.getEmail());
+        txtSenha.setText(selecionado.getSenha());
+        txtLogin.setText(selecionado.getLogin());
+        btAtualizar.setDisable(false);
+        btExcluir.setDisable(false);
     }
     
     @FXML
@@ -148,20 +164,13 @@ public class FXMLDocumentController implements Initializable {
             alert.setTitle("Confirmação de Atualização");
             alert.setHeaderText(null);
             alert.setContentText("Certeza que deseja atualizar o usuário " + selecionado.getNome() + "?");
-
             ButtonType botaoSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
             ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
-
             alert.getButtonTypes().setAll(botaoSim, botaoNao);
-
             Optional<ButtonType> resultado = alert.showAndWait();
             if (resultado.isPresent() && resultado.get() == botaoSim) {
                 if (!emailValido(txtEmail.getText())) {
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Erro de E-mail");
-                    alert.setHeaderText(null);
-                    alert.setContentText("E-mail inválido. Use o formato exemplo@dominio.com");
-                    alert.showAndWait();
+                    showError("E-mail inválido. Use o formato exemplo@dominio.com");
                     return;
                 }
                 String nome = txtNome.getText();
@@ -172,46 +181,34 @@ public class FXMLDocumentController implements Initializable {
                 selecionado.setSenha(senha);
                 selecionado.setEmail(email);
                 selecionado.setLogin(login);
-                U.atualizarUsuario(selecionado);
+                usuarioDAO.atualizarUsuario(selecionado);
             }
         }else{
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Erro");
-            alert.setHeaderText(null);
-            alert.setContentText("Preencha todos os campos antes de atualizar!");
-            alert.showAndWait();
+            showError("Preencha todos os campos antes de cadastrar.");
         }
-        att();
+       AtualizarTela();
     }
     
-    public void att(){
-        List<UsuarioDTO> listaUsuarios = U.listarUsuarios();
+    public void AtualizarTela(){
+        List<UsuarioDTO> listaUsuarios = usuarioDAO.listarUsuarios();
         Collections.sort(listaUsuarios, Comparator.comparingInt(UsuarioDTO::getId));
         ObservableList<UsuarioDTO> usuarios = FXCollections.observableArrayList(listaUsuarios);
-        tb.setItems(usuarios);
+        table.setItems(usuarios);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //fazer o tab correr corretamente na ordem certa
         txtNome.setFocusTraversable(true);
         txtEmail.setFocusTraversable(true);
         txtSenha.setFocusTraversable(true);
         txtLogin.setFocusTraversable(true);
+        //atribuindo o valor de cada coluna a um atributo específico
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colunaSenha.setCellValueFactory(new PropertyValueFactory<>("senha"));
         colunaLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
-        btAtualizar.setDisable(true);
-        btExcluir.setDisable(true);
-        tb.setOnMouseClicked(event -> {
-           selecionado =  (UsuarioDTO) tb.getSelectionModel().getSelectedItem();
-           txtNome.setText(selecionado.getNome());
-           txtEmail.setText(selecionado.getEmail());
-           txtSenha.setText(selecionado.getSenha());
-           txtLogin.setText(selecionado.getLogin());
-           btAtualizar.setDisable(false);
-           btExcluir.setDisable(false);
-        });
-        att();
+        limparTexto();
+        AtualizarTela();
     }       
 }

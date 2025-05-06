@@ -5,7 +5,7 @@
 
 /* Estilizando labels em negrito */
 .label {
-    -fx-font-size: 14px;
+    -fx-font-size: 1em;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
@@ -14,14 +14,14 @@
 .table-view {
     -fx-background-color: #2a2a2a;
     -fx-border-color: #444444;
-    -fx-border-radius: 8px;
+    -fx-border-radius: 0.5em;
 }
 
 /* Ajustando o cabeçalho da tabela */
 .table-view .column-header-background {
     -fx-background-color: #3b3b3b !important;
-    -fx-border-radius: 8px 8px 0px 0px;
-    -fx-padding: 5px;
+    -fx-border-radius: 0.5em 0.5em 0 0;
+    -fx-padding: 0.3em;
 }
 
 /* Adicionando divisórias no cabeçalho */
@@ -29,8 +29,8 @@
     -fx-background-color: #3b3b3b !important;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-border-color: #555555; /* Adicionando borda entre as colunas */
-    -fx-border-width: 0 1px 0 0; /* Borda direita, exceto última coluna */
+    -fx-border-color: #555555;
+    -fx-border-width: 0 0.07em 0 0;
 }
 
 /* Alternando fundo das células pares e ímpares */
@@ -41,7 +41,7 @@
 
 .table-row-cell:even {
     -fx-background-color: #383838;
-    -fx-text-fill: white;   
+    -fx-text-fill: white;
 }
 
 /* Ajustando a cor das células selecionadas */
@@ -55,7 +55,7 @@
     -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-border-color: #555555;
-    -fx-border-width: 0 1px 0 0;
+    -fx-border-width: 0 0.07em 0 0;
 }
 
 /* Arredondando inputs */
@@ -63,8 +63,8 @@
     -fx-background-color: #333333;
     -fx-text-fill: white;
     -fx-border-color: #555555;
-    -fx-border-radius: 6px;
-    -fx-padding: 8px;
+    -fx-border-radius: 0.4em;
+    -fx-padding: 0.5em;
 }
 
 /* Botões com efeito 3D */
@@ -72,15 +72,17 @@
     -fx-background-color: #3b3b3b;
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-border-radius: 6px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 5, 5);
+    -fx-border-radius: 0.4em;
+    -fx-padding: 0.5em 1.2em;
+    -fx-font-size: 0.95em;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 0.7em, 0, 0.35em, 0.35em);
     -fx-transition: all 0.2s ease;
 }
 
 /* Efeito de pressão 3D ao clicar */
 .button:pressed {
-    -fx-translateY: 4px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 2, 2);
+    -fx-translateY: 0.3em;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 0.35em, 0, 0.15em, 0.15em);
 }
 
 /* Estilização específica dos botões */
@@ -115,4 +117,10 @@
 
 #btLimpar:hover {
     -fx-background-color: #5a6268;
+}
+
+/* Foco nos inputs */
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #007bff;
+    -fx-background-color: #2c2c2c;
 }
