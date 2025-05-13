@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
- */
+
 package controller;
 
 import java.net.URL;
@@ -11,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +17,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -30,29 +25,24 @@ import javafx.scene.input.MouseEvent;
 import model.UsuarioDAO;
 import model.UsuarioDTO;
 import static util.DialogUtil.showError;
-import static util.DialogUtil.showInfo;
 
 
-/**
- *
- * @author ra2357046
- */
 public class FXMLDocumentController implements Initializable {
     
     @FXML 
-    private TableColumn<UsuarioDTO, Integer> colunaId;
+    private TableColumn<UsuarioDTO, Integer> colId;
     
     @FXML 
-    private TableColumn<UsuarioDTO, String> colunaNome;
+    private TableColumn<UsuarioDTO, String> colNome;
     
     @FXML 
-    private TableColumn<UsuarioDTO, String> colunaEmail;
+    private TableColumn<UsuarioDTO, String> colEmail;
     
     @FXML 
-    private TableColumn<UsuarioDTO, String> colunaSenha;
+    private TableColumn<UsuarioDTO, String> colSenha;
     
     @FXML 
-    private TableColumn<UsuarioDTO, String> colunaLogin;
+    private TableColumn<UsuarioDTO, String> colLogin;
 
     @FXML
     private TextField txtNome;
@@ -67,19 +57,19 @@ public class FXMLDocumentController implements Initializable {
     private TextField txtLogin;
     
     @FXML
-    private Button btLimpar;
+    private Button btnLimpar;
     
     @FXML
-    private Button btCadastrar;
+    private Button btnCadastrar;
     
     @FXML
-    private Button btExcluir;
+    private Button btnExcluir;
     
     @FXML
-    private Button btAtualizar;
+    private Button btnAtualizar;
     
     @FXML
-    private TableView table;
+    private TableView tblUsuario;
     
     //valida o email
     private boolean emailValido(String email) {
@@ -97,8 +87,8 @@ public class FXMLDocumentController implements Initializable {
         txtSenha.setText("");
         txtEmail.setText("");
         txtLogin.setText("");
-        btAtualizar.setDisable(true);
-        btExcluir.setDisable(true);
+        btnAtualizar.setDisable(true);
+        btnExcluir.setDisable(true);
     }
     
     @FXML
@@ -114,8 +104,8 @@ public class FXMLDocumentController implements Initializable {
             String senha = txtSenha.getText();
             String email = txtEmail.getText();
             String login = txtLogin.getText();
-            UsuarioDTO u = new UsuarioDTO(nome, email, senha, login);
-            usuarioDAO.cadastrarUsuario(u);
+            UsuarioDTO novoUsuario = new UsuarioDTO(nome, email, senha, login);
+            usuarioDAO.cadastrarUsuario(novoUsuario);
             limparTexto();
         }else{
             showError("Preencha todos os campos antes de cadastrar.");
@@ -125,7 +115,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void deletar(ActionEvent event) throws SQLException {
-        UsuarioDTO selecionado = (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        UsuarioDTO selecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             showError("Nenhum usuário selecionado.");
             return;
@@ -148,18 +138,18 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void selecionarUsuario(MouseEvent event){
-        UsuarioDTO selecionado =  (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        UsuarioDTO selecionado =  (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
         txtNome.setText(selecionado.getNome());
         txtEmail.setText(selecionado.getEmail());
         txtSenha.setText(selecionado.getSenha());
         txtLogin.setText(selecionado.getLogin());
-        btAtualizar.setDisable(false);
-        btExcluir.setDisable(false);
+        btnAtualizar.setDisable(false);
+        btnExcluir.setDisable(false);
     }
     
     @FXML
     private void atualizar(ActionEvent event) throws SQLException {
-        UsuarioDTO selecionado = (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        UsuarioDTO selecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             showError("Nenhum usuário selecionado.");
             return;
@@ -200,7 +190,7 @@ public class FXMLDocumentController implements Initializable {
         List<UsuarioDTO> listaUsuarios = usuarioDAO.listarUsuarios();
         Collections.sort(listaUsuarios, Comparator.comparingInt(UsuarioDTO::getId));
         ObservableList<UsuarioDTO> usuarios = FXCollections.observableArrayList(listaUsuarios);
-        table.setItems(usuarios);
+        tblUsuario.setItems(usuarios);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -210,11 +200,11 @@ public class FXMLDocumentController implements Initializable {
         txtSenha.setFocusTraversable(true);
         txtLogin.setFocusTraversable(true);
         //atribuindo o valor de cada coluna a um atributo específico
-        colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colunaSenha.setCellValueFactory(new PropertyValueFactory<>("senha"));
-        colunaLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colSenha.setCellValueFactory(new PropertyValueFactory<>("senha"));
+        colLogin.setCellValueFactory(new PropertyValueFactory<>("login"));
         limparTexto();
         AtualizarTela();
     }       

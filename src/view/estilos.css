@@ -86,36 +86,36 @@
 }
 
 /* Estilização específica dos botões */
-#btCadastrar {
+#btnCadastrar {
     -fx-background-color: #007bff;
 }
 
-#btCadastrar:hover {
+#btnCadastrar:hover {
     -fx-background-color: #0056b3;
 }
 
-#btAtualizar {
+#btnAtualizar {
     -fx-background-color: #28a745;
 }
 
-#btAtualizar:hover {
+#btnAtualizar:hover {
     -fx-background-color: #1e7e34;
 }
 
-#btExcluir {
+#btnExcluir {
     -fx-background-color: #dc3545;
 }
 
-#btExcluir:hover {
+#btnExcluir:hover {
     -fx-background-color: #bb2d3b;
 }
 
 /* Aplicando o efeito 3D ao botão Limpar */
-#btLimpar {
+#btnLimpar {
     -fx-background-color: #6c757d;
 }
 
-#btLimpar:hover {
+#btnLimpar:hover {
     -fx-background-color: #5a6268;
 }
 
