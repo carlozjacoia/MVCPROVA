@@ -24,6 +24,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import model.UsuarioDAO;
 import model.UsuarioDTO;
+import static util.DialogUtil.showConfirmation;
 import static util.DialogUtil.showError;
 
 
@@ -115,21 +116,13 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void deletar(ActionEvent event) throws SQLException {
-        UsuarioDTO selecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
+        UsuarioDTO selecionado = selecionarUsuario();
         if (selecionado == null) {
             showError("Nenhum usuário selecionado.");
             return;
         }
         UsuarioDAO usuarioDAO = new UsuarioDAO();
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmação de Exclusão");
-        alert.setHeaderText(null);
-        alert.setContentText("Certeza que deseja deletar o usuário " + selecionado.getNome() + "?");
-        ButtonType botaoSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
-        ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
-        alert.getButtonTypes().setAll(botaoSim, botaoNao);
-        Optional<ButtonType> resultado = alert.showAndWait();
-        if (resultado.isPresent() && resultado.get() == botaoSim) {
+        if (showConfirmation(selecionado.getNome(), "excluir")) {
             usuarioDAO.deletarUsuario(selecionado.getId());
             limparTexto();
         }
@@ -138,7 +131,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void selecionarUsuario(MouseEvent event){
-        UsuarioDTO selecionado =  (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
+        UsuarioDTO selecionado = selecionarUsuario();
         txtNome.setText(selecionado.getNome());
         txtEmail.setText(selecionado.getEmail());
         txtSenha.setText(selecionado.getSenha());
@@ -149,26 +142,15 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void atualizar(ActionEvent event) throws SQLException {
-        UsuarioDTO selecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
-        if (selecionado == null) {
-            showError("Nenhum usuário selecionado.");
-            return;
-        }
+        UsuarioDTO selecionado = selecionarUsuario();
         if(!txtNome.getText().isEmpty() && !txtSenha.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtLogin.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmação de Atualização");
-            alert.setHeaderText(null);
-            alert.setContentText("Certeza que deseja atualizar o usuário " + selecionado.getNome() + "?");
-            ButtonType botaoSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
-            ButtonType botaoNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
-            alert.getButtonTypes().setAll(botaoSim, botaoNao);
-            Optional<ButtonType> resultado = alert.showAndWait();
-            if (resultado.isPresent() && resultado.get() == botaoSim) {
+            //confirmação
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            if (showConfirmation(selecionado.getNome(), "atualizar")) {
                 if (!emailValido(txtEmail.getText())) {
                     showError("E-mail inválido. Use o formato exemplo@dominio.com");
                     return;
                 }
-                UsuarioDAO usuarioDAO = new UsuarioDAO();
                 String nome = txtNome.getText();
                 String senha = txtSenha.getText();
                 String email = txtEmail.getText();
@@ -185,6 +167,16 @@ public class FXMLDocumentController implements Initializable {
        AtualizarTela();
     }
     
+    public UsuarioDTO selecionarUsuario(){
+        UsuarioDTO selecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
+        if(selecionado != null){
+            return selecionado;
+        }else{
+            showError("Nenhum usuário selecionado.");
+            return null;
+        }
+    }
+    
     public void AtualizarTela(){
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         List<UsuarioDTO> listaUsuarios = usuarioDAO.listarUsuarios();
@@ -192,6 +184,7 @@ public class FXMLDocumentController implements Initializable {
         ObservableList<UsuarioDTO> usuarios = FXCollections.observableArrayList(listaUsuarios);
         tblUsuario.setItems(usuarios);
     }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //fazer o tab correr corretamente na ordem certa
