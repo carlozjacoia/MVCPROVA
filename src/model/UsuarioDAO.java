@@ -24,7 +24,7 @@ public class UsuarioDAO {
             try (ResultSet rs = ps.getGeneratedKeys()) {
             if (rs.next()) {
                 usuario.setId(rs.getInt(1)); 
-                System.out.println("Usuário cadastrado com sucesso. ID: " + usuario.getId());
+                //System.out.println("Usuário cadastrado com sucesso. ID: " + usuario.getId());
             }
         }
         }catch(SQLException e){
@@ -37,7 +37,7 @@ public class UsuarioDAO {
         String sql = "SELECT * FROM usuario";
         try(Connection con = new Conexao().getConnection(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery();){
             while(rs.next()){
-                System.out.println("#"+ rs.getInt("id")+ " # "+rs.getString("nome")+ " # "+rs.getString("email")+ " # "+rs.getString("senha")+ " # "+rs.getString("login"));
+                //System.out.println("#"+ rs.getInt("id")+ " # "+rs.getString("nome")+ " # "+rs.getString("email")+ " # "+rs.getString("senha")+ " # "+rs.getString("login"));
             }
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +74,7 @@ public class UsuarioDAO {
         try(Connection con = new Conexao().getConnection(); PreparedStatement ps = con.prepareStatement(sql)){
             ps.setInt(1, id); 
             ps.executeUpdate();
-            System.out.println("Usuário com ID " + id + " deletado com sucesso.");
+            //System.out.println("Usuário com ID " + id + " deletado com sucesso.");
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             showError("Erro ao deletar o usuário");
@@ -91,7 +91,7 @@ public class UsuarioDAO {
             ps.setInt(5, usuario.getId()); 
             int linhas = ps.executeUpdate();
             if (linhas > 0) {
-                System.out.println("Usuário com ID " + usuario.getId() + " atualizado com sucesso.");
+                //System.out.println("Usuário com ID " + usuario.getId() + " atualizado com sucesso.");
             }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);

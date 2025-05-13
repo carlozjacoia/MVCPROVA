@@ -78,14 +78,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button btAtualizar;
     
-    
     @FXML
     private TableView table;
-    
-    public UsuarioDAO usuarioDAO = new UsuarioDAO();
-    
-    //usuario selecionado
-    public UsuarioDTO  selecionado;
     
     //valida o email
     private boolean emailValido(String email) {
@@ -96,7 +90,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void limparCampos(ActionEvent event){
         limparTexto();
-        selecionado = null;
     }
     
     public void limparTexto(){
@@ -116,6 +109,7 @@ public class FXMLDocumentController implements Initializable {
                 showError("E-mail inválido. Use o formato exemplo@dominio.com");
                 return;
             }
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
             String nome = txtNome.getText();
             String senha = txtSenha.getText();
             String email = txtEmail.getText();
@@ -131,6 +125,12 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void deletar(ActionEvent event) throws SQLException {
+        UsuarioDTO selecionado = (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        if (selecionado == null) {
+            showError("Nenhum usuário selecionado.");
+            return;
+        }
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmação de Exclusão");
         alert.setHeaderText(null);
@@ -148,7 +148,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void selecionarUsuario(MouseEvent event){
-        selecionado =  (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        UsuarioDTO selecionado =  (UsuarioDTO) table.getSelectionModel().getSelectedItem();
         txtNome.setText(selecionado.getNome());
         txtEmail.setText(selecionado.getEmail());
         txtSenha.setText(selecionado.getSenha());
@@ -159,6 +159,11 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void atualizar(ActionEvent event) throws SQLException {
+        UsuarioDTO selecionado = (UsuarioDTO) table.getSelectionModel().getSelectedItem();
+        if (selecionado == null) {
+            showError("Nenhum usuário selecionado.");
+            return;
+        }
         if(!txtNome.getText().isEmpty() && !txtSenha.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtLogin.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmação de Atualização");
@@ -173,6 +178,7 @@ public class FXMLDocumentController implements Initializable {
                     showError("E-mail inválido. Use o formato exemplo@dominio.com");
                     return;
                 }
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
                 String nome = txtNome.getText();
                 String senha = txtSenha.getText();
                 String email = txtEmail.getText();
@@ -190,6 +196,7 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public void AtualizarTela(){
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
         List<UsuarioDTO> listaUsuarios = usuarioDAO.listarUsuarios();
         Collections.sort(listaUsuarios, Comparator.comparingInt(UsuarioDTO::getId));
         ObservableList<UsuarioDTO> usuarios = FXCollections.observableArrayList(listaUsuarios);
