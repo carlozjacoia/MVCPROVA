@@ -24,7 +24,6 @@ public class UsuarioDAO {
             try (ResultSet rs = ps.getGeneratedKeys()) {
             if (rs.next()) {
                 usuario.setId(rs.getInt(1)); 
-                //System.out.println("Usuário cadastrado com sucesso. ID: " + usuario.getId());
             }
         }
         }catch(SQLException e){
@@ -74,7 +73,6 @@ public class UsuarioDAO {
         try(Connection con = new Conexao().getConnection(); PreparedStatement ps = con.prepareStatement(sql)){
             ps.setInt(1, id); 
             ps.executeUpdate();
-            //System.out.println("Usuário com ID " + id + " deletado com sucesso.");
         }catch(SQLException ex){
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             showError("Erro ao deletar o usuário");

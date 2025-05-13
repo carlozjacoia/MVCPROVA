@@ -116,14 +116,14 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void deletar(ActionEvent event) throws SQLException {
-        UsuarioDTO selecionado = selecionarUsuario();
-        if (selecionado == null) {
-            showError("Nenhum usuário selecionado.");
+        UsuarioDTO usuarioSelecionado = selecionarUsuario();
+        if (usuarioSelecionado == null) {
+            showError("Nenhum usuário usuarioSelecionado.");
             return;
         }
         UsuarioDAO usuarioDAO = new UsuarioDAO();
-        if (showConfirmation(selecionado.getNome(), "excluir")) {
-            usuarioDAO.deletarUsuario(selecionado.getId());
+        if (showConfirmation(usuarioSelecionado.getNome(), "excluir")) {
+            usuarioDAO.deletarUsuario(usuarioSelecionado.getId());
             limparTexto();
         }
        AtualizarTela();
@@ -131,22 +131,22 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void selecionarUsuario(MouseEvent event){
-        UsuarioDTO selecionado = selecionarUsuario();
-        txtNome.setText(selecionado.getNome());
-        txtEmail.setText(selecionado.getEmail());
-        txtSenha.setText(selecionado.getSenha());
-        txtLogin.setText(selecionado.getLogin());
+        UsuarioDTO usuarioSelecionado = selecionarUsuario();
+        txtNome.setText(usuarioSelecionado.getNome());
+        txtEmail.setText(usuarioSelecionado.getEmail());
+        txtSenha.setText(usuarioSelecionado.getSenha());
+        txtLogin.setText(usuarioSelecionado.getLogin());
         btnAtualizar.setDisable(false);
         btnExcluir.setDisable(false);
     }
     
     @FXML
     private void atualizar(ActionEvent event) throws SQLException {
-        UsuarioDTO selecionado = selecionarUsuario();
+        UsuarioDTO usuarioSelecionado = selecionarUsuario();
         if(!txtNome.getText().isEmpty() && !txtSenha.getText().isEmpty() && !txtEmail.getText().isEmpty() && !txtLogin.getText().isEmpty()) {
             //confirmação
             UsuarioDAO usuarioDAO = new UsuarioDAO();
-            if (showConfirmation(selecionado.getNome(), "atualizar")) {
+            if (showConfirmation(usuarioSelecionado.getNome(), "atualizar")) {
                 if (!emailValido(txtEmail.getText())) {
                     showError("E-mail inválido. Use o formato exemplo@dominio.com");
                     return;
@@ -155,11 +155,11 @@ public class FXMLDocumentController implements Initializable {
                 String senha = txtSenha.getText();
                 String email = txtEmail.getText();
                 String login = txtLogin.getText();
-                selecionado.setNome(nome);
-                selecionado.setSenha(senha);
-                selecionado.setEmail(email);
-                selecionado.setLogin(login);
-                usuarioDAO.atualizarUsuario(selecionado);
+                usuarioSelecionado.setNome(nome);
+                usuarioSelecionado.setSenha(senha);
+                usuarioSelecionado.setEmail(email);
+                usuarioSelecionado.setLogin(login);
+                usuarioDAO.atualizarUsuario(usuarioSelecionado);
             }
         }else{
             showError("Preencha todos os campos antes de cadastrar.");
@@ -168,11 +168,11 @@ public class FXMLDocumentController implements Initializable {
     }
     
     public UsuarioDTO selecionarUsuario(){
-        UsuarioDTO selecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
-        if(selecionado != null){
-            return selecionado;
+        UsuarioDTO usuarioSelecionado = (UsuarioDTO) tblUsuario.getSelectionModel().getSelectedItem();
+        if(usuarioSelecionado != null){
+            return usuarioSelecionado;
         }else{
-            showError("Nenhum usuário selecionado.");
+            showError("Nenhum usuário usuarioSelecionado.");
             return null;
         }
     }
