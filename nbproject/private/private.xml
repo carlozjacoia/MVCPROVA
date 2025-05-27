@@ -11,6 +11,10 @@
             <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/model/Conexao.java</file>
             <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/util/DialogUtil.java</file>
             <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/model/UsuarioDTO.java</file>
+            <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/validator/UsuarioValidator.java</file>
+            <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/service/UsuarioService.java</file>
+            <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/validator/Validator.java</file>
+            <file>file:/C:/Users/ra2357046/Documents/NetBeansProjects/MVCPROVA/src/validator/CampoObrigatorioValidator.java</file>
         </group>
     </open-files>
 </project-private>
