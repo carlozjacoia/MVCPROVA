@@ -21,10 +21,16 @@ import model.UsuarioDAO;
 import model.UsuarioDTO;
 import static util.DialogUtil.showConfirmation;
 import static util.DialogUtil.showError;
-import validator.UsuarioValidator;
+import validator.IUsuarioValidator;
 
 public class FXMLDocumentController implements Initializable {
 
+    private final IUsuarioValidator usuarioValidador; // Depende da interface
+
+    public FXMLDocumentController(IUsuarioValidator usuarioValidator) {
+        this.usuarioValidador = usuarioValidator;
+    }
+    
     @FXML
     private TableColumn<UsuarioDTO, Integer> colId;
 
@@ -66,8 +72,6 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private TableView tblUsuario;
-
-    private final UsuarioValidator usuarioValidador = new UsuarioValidator();
 
     //limpa os campos
     @FXML
